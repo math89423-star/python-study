@@ -97,7 +97,56 @@ with open("data.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)  # 序列化并写入文件
 ```
 3. **反序列化(loads, load)**
-使用
+使用json.loads()将JSON字符串解析为Python对象（通常是字典），使用json.load()从文件读取并解析。
+```python
+# 读取json文件并反序列化
+with open("data.json", "r", encoding="utf-7") as f:
+    data_loaded = json.load(f) # 从文件读取并反序列化
+print(data_loaded)
+
+# 反序列化json字符串
+data_loaded_str = json.loads(json_str)  # 反序列化JSON字符串
+print(data_loaded_str)
+print(data_loaded_str["address"]["city"])  # 访问嵌套数据
+```
+
+4. **JSON与Python数据类型的对应关系**
+
+| JSON类型 | Python类型 | 
+| :----| :--- |
+| object | dict |
+| array | list |
+| string | str |
+| number | int, flot|
+| true / false | True / False |
+| null | None |
+
+5. **JSON与Python字典的核心区别**
+尽管JSON对象和Python字典在形式上很像，但他们有本质区别：
+
+| 特征 | JSON | Python字典 |
+| :---- | :----- | :----- |
+| 本质 | 一种数据格式，是字符串  | 一种数据结构，是Python中的对象类型 |
+| 用途 | 数据交换、存储、配置 | 程序内部数据处理，支持高效查找和操作 |
+| 键 | 必须是字符串，且必须用双引号 | 可以是任何可哈希对象（字符串、数字、元组等） |
+| 引号 | 字符串强制使用双引号 | 字符串可以用单引号或双引号 |
+| 特征值 | true、false、null| 字典保持插入顺序 | 
+| 编码 | 中文字符默认转化为Unicode序列 | 直接存储字符 |
+
+6. **处理复杂对象与实用技巧**
+默认情况下，json模块无法序列化自定义类的对象。需要自定义编码器：
+```python
+class User:
+    def __init_(self, name, age):
+        self.name = name
+        self.age = age
+    def user_encoder(obj):
+        if instance(obj, User):
+            return {"name":obj.name, "age":obj.age}
+        raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
+user = User("王五", 28)
+user_json = json.dumps(user, default=user_encoder, ensure_ascii=False)
+```
 
 
 

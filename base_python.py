@@ -93,3 +93,13 @@ json_str = json.dumps(data, ensure_ascii=False, indent=2)  # 序列化为JSON字
 # 写入json文件
 with open("data.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)  # 序列化并写入文件
+
+# 读取json文件并反序列化
+with open("data.json", "r", encoding="utf-7") as f:
+    data_loaded = json.load(f) # 从文件读取并反序列化
+print(data_loaded)
+
+# 反序列化json字符串
+data_loaded_str = json.loads(json_str)  # 反序列化JSON字符串
+print(data_loaded_str)
+print(data_loaded_str["address"]["city"])  # 访问嵌套数据
