@@ -76,7 +76,7 @@ print(set_a | set_b)  # 并集: {1, 2, 3, 4}
 print(set_a & set_b)  # 交集: {2, 3} """
 
 
-import json
+""" import json
 data = {
     "name": "Alice",
     "age": 25,
@@ -102,4 +102,32 @@ print(data_loaded)
 # 反序列化json字符串
 data_loaded_str = json.loads(json_str)  # 反序列化JSON字符串
 print(data_loaded_str)
-print(data_loaded_str["address"]["city"])  # 访问嵌套数据
+print(data_loaded_str["address"]["city"])  # 访问嵌套数据 """
+
+
+""" class Person():
+    num = 0
+    def __init__(self):
+        Person.num += 1
+print(Person.num) # 实例未创建，不会调用__init__方法，num仍为0
+Person()
+Person()
+Person()
+Person()
+print(Person.num) # 创建了4个实例，调用了4次__init__方法，num变为4
+ """
+
+
+class Person(object):
+    pass
+
+class Person2(object):
+    def __init__(self):
+        print("这是一个构造方法，在创建对象时自动调用")
+
+person1 = Person()  # 创建一个Person类的实例
+person2 = Person2()  # 创建另一个实例
+
+print(person1)  # 输出类似 <__main__.Person object at 0x...>
+print(type(person2))  
+
