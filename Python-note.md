@@ -821,3 +821,30 @@ my_project/             <-- 项目根目录
 ```
 **1. 绝对导入（Absolute Import）-- “发全地址”**
 不管在哪里，都从项目跟目录（sys.path的起点）开始写路径。
+写法：```from plugins.api import pixiv_api```
+优点：清晰，不容易出错。只要根目录不变，代码在哪里都能运行。
+
+**2. 相对导入（Relative Impoprt）-- “给我旁边的人”**
+这就是代码中点```.```的含义，它是基于当前文件所在位置来找文件的。
+```.```一个点：代表当前文件夹
+```..```两个点：代表上一级文件夹
+例如```plugin/api/pixiv_api.py```中像导入```plugins/config/config.py```
+```python
+# 返回上一级（plugins）,再进入config文件夹，找config模块
+from ..config import config
+```
+在```plugins/__init__.py```中导入```plugins/api/pixiv_api.py```中的```search_pixiv_by_tag```函数
+```python
+# 意思是：在当前文件夹（plugins）下，找api文件夹里的pixiv_api
+from .api.pixiv_api import search_pixiv_by_tag
+```
+**模块导入的一个“天坑”**：相对导入（带点的）不能作为“主程序”（直接运行的脚本）中运行。如果直接运行```python plugins/api/pixiv_api.py```，会出现报错```ImportError: attempted relative import with no known parent package```原因：只有当这个文件呗别的程序导入时，它才知道它的“上一级”是谁。直接运行时，它自己就是老大，没有上一级。
+
+### __init__.py的作用
+1. 标记：它告诉Python，这个文件夹是一个包，不是普通的文件夹。
+2. 暴露接口：
+假设```pixiv_api.py```里面有一个函数名```download_image```
+正常导入：```from plugins.api.pixiv_api import download_image```
+如果在 ```api/__init__.py``` 里写：```from .pixiv_api import download_image```
+外部就可以简写为：```from plugins.api import download_image``` (省掉了一层文件名)。
+3. 初始化：到导入这个包时，```__init__.py```里的代码就会自动执行一次。例如可以在此处配置“用户白名单”，这意味着只要插件一加载，配置就生效了。
