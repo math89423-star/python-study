@@ -787,3 +787,37 @@ search_tag = " ".join(tags)
 print(search_tag)
 # 输出结果：ypeError: sequence item 0: expected str instance, int found
 ```
+
+
+## Python的路径导入方式
+当写下import pixiv_api时，Python就如同快递员，它手里有一张地图列表（术语：sys.path），会按照顺序去这几个地方找名叫pixiv_api.py的文件。
+寻址顺序：
+1. 当前目录（Current Directory）: 也就是运行python xxx.py命令时所在的那个文件夹。
+2. 标准库（Standard Library）: python自带的工具箱（如os, time, json）。如同“快递员的随身背包”
+3. 第三方库（Site-packages）: 使用pip install 下载的库（如nonebot, aiohttp）
+**常见的坑：**如果把自己的文件命名为random.py或者time.py，Python会先在当前目录找到文件，而不是去标准库找真正的random和time库，导致报错！一定不要使用标准库的名字去命名文件！
+
+### 模块（Module） VS 包（Package）
+**模块（Module）：**任何一个以.py结尾的文件就是一个模块
+比如：一个具体的工具，就像“螺丝刀”
+
+**包（Package）:**一个任何包含__init__.py文件的文件夹
+比如：一个工具箱
+
+### 两种核心导入方式（绝对 VS 相对）
+```python
+# 一个常见的nonebot的插件目录结构
+my_project/             <-- 项目根目录
+│
+├── main.py             <-- 启动入口
+└── plugins/            <-- 插件包
+    ├── __init__.py
+    ├── api/            <-- api 子包
+    │   ├── __init__.py
+    │   └── pixiv_api.py
+    └── config/         <-- config 子包
+        ├── __init__.py
+        └── config.py
+```
+**1. 绝对导入（Absolute Import）-- “发全地址”**
+不管在哪里，都从项目跟目录（sys.path的起点）开始写路径。
