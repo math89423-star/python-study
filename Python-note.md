@@ -848,3 +848,26 @@ from .api.pixiv_api import search_pixiv_by_tag
 如果在 ```api/__init__.py``` 里写：```from .pixiv_api import download_image```
 外部就可以简写为：```from plugins.api import download_image``` (省掉了一层文件名)。
 3. 初始化：到导入这个包时，```__init__.py```里的代码就会自动执行一次。例如可以在此处配置“用户白名单”，这意味着只要插件一加载，配置就生效了。
+
+## 更高级的“寻址”技巧
+代码示例：
+```python
+Path(__file__).parent.parent.parent.absolute()
+DATA_DIR = BASE_DIR / "data"
+TEMP_DIR = DATA_DIR / "pixiv_temp"
+```
+1. 核心锚点：```__file__```
+第一步都是这个变量。```__file__```是Python的内置变量，代表当前这个代码文件自己的文件名（有时包含路径）。
+比喻：就像在商场里看地图，地图上的红点代表“您在此处”
+2. pathlib: 智能导航
+（1）```Path(__file__)```
+动作：把文件路径变成一个“智能对象”，不再是冰冷的字符串，现在拥有了“感知”周围环境的能力。
+（2）```.parent```
+动作：往上走一层文件夹
+连用三次```.parent.parent.parent```：往上跳三级。这一行代码的意思是：“不管我在哪，请往上退三层，回到项目的根目录”。这样你就拿到了项目的总大门钥匙。
+3. ```.absolute()```
+动作：确保拿到的是全路径（从盘符开始），防止出bug。
+4. ```BASE_DIR / "data"```
+动作：路径拼接
+解释：在```pathlib```里，除号```/```不再是除法，而是拼接符。
+优点：写起来非常直观，就像写在文件路径的斜杠一样。
