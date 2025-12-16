@@ -871,3 +871,30 @@ TEMP_DIR = DATA_DIR / "pixiv_temp"
 动作：路径拼接
 解释：在```pathlib```里，除号```/```不再是除法，而是拼接符。
 优点：写起来非常直观，就像写在文件路径的斜杠一样。
+
+## Python的文件读取操作
+找到了文件之后，下一步就是“打开并进行读取”
+示例代码：
+```python
+if os.path.exists(character_file):
+    try:
+        with open(character_file, 'r', encoding='utf-8') as f:
+            character_data = json.load(f)
+    except Exception as e:
+        logger.info(f"加载角色数据失败：{str(e)}")
+```
+示例代码包含了python的三个极其重要的技术点：
+（1）上下文管理器（```with```语句） -- 资源的自动管家
+（2）序列化（```json```模块） -- 数据的通用翻译官
+（3）异常处理（```try...except```） -- 程序的防弹衣
+
+第一部分：上下文管理器（```with```） -- 自动关门的强迫症管家
+```with open(character_file, 'r', 'encodeing='utf-8') as f: ```
+这段代码保证了：哪怕是读取json出错了，或者读完了，```f```文件句柄都会被自动关闭，释放系统资源。
+（同理的，如代码```async with aiohttp.ClientSession() as session```它是帮助自动关闭网络连接）
+
+第二部分：序列化```json``` -- 也就是“翻译”
+读取的文件```character.json```本质上是一串字符串（文本）。Python看不懂字符串里的```{"key" : "value"}```代表字典。
+此时需要一个翻译官。
+**JSON(JavaScript Object Notation)**:互联网上最通用的数据交换格式。
+```json.load(f)```：把文件里的文本，翻译成python的字典（dict）或者列表（list）
