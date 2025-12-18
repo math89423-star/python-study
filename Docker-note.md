@@ -11,6 +11,17 @@ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] 
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
+
+## 如果安装docker出现连接不上官方源
+1. 删除旧的（连不上的）Docker 源配置 先清理掉会导致报错的旧文件，防止干扰：
+```sudo rm /etc/apt/sources.list.d/docker.list```
+2. 重新写入阿里云的镜像源 请直接复制并运行下面的整段命令（这是一条命令）。它会创建一个新的配置文件，并强制指向阿里云：
+```echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null```
+3. 再次更新缓存 这一步至关重要，它会让系统去阿里云获取最新的软件列表：
+```sudo apt-get update```
+4. 重新安装
+```sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin```
+
 ## Docker常见命令
 ```python
 docker --version  查看 Docker 版本信息，验证是否安装成功
