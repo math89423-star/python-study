@@ -29,41 +29,110 @@ class ListNode(object):
         self.val = val
         self.next = next
 
+
+# 解法一：链表-数组-链表转化，暴力求解
+# class Solution(object):
+#     def addTwoNumbers(self, l1, l2):
+#         """
+#         :type l1: Optional[ListNode]
+#         :type l2: Optional[ListNode]
+#         :rtype: Optional[ListNode]
+#         """
+#         add_num1 = self.caculate_add_sum(l1)
+#         add_num2 = self.caculate_add_sum(l2)
+#         #print(f"add_num1:{add_num1}  add_num2:{add_num2}")
+#         sum = add_num1 + add_num2
+#         #print(f"sum:{sum}")
+#         # 求余数做数组
+#         if sum == 0:
+#             res_link = ListNode(0)
+#             return res_link
+#         res = []
+#         while sum != 0:
+#             res.append(sum % 10)    # 百分号%是取余数
+#             sum = sum // 10         # //代表整除
+#         res_link = self.create_linked_list(res)
+#         return res_link
+    
+#     def create_linked_list(self, arr):
+#         # 定义哑结点，便于链表操作
+#         dummy = ListNode(0)
+#         current = dummy
+#         for val in arr:
+#             # 每读到一个数字，就建立一个节点
+#             current.next = ListNode(val)
+#             # 指针向后移动一步，站在新节点
+#             current = current.next
+#         # dummy是虚假的链表头，dummy.next才是真正的链表头
+#         return dummy.next
+
+#     def print_linked_list(self, head):
+#         result = []
+#         current = head
+#         while current:
+#             result.append(current.val)
+#             current = current.next
+#         return result
+
+#     def caculate_add_sum(self, caculate_list):
+#         # TODO:取值，取值系数，加数
+#             current = caculate_list
+#             sum = 0     # 求加数1的值，起始值为0
+#             sqar_num = 1    # 代表乘积系数，头结点是1，后面一个节点依次扩大10倍
+#             while current:
+#                 # num代表当前位数值
+#                 num = current.val
+#                 current = current.next
+#                 add_num = num * sqar_num
+#                 sum += add_num
+#                 sqar_num *= 10
+#             return sum
+
+
+# 解法二：一次遍历法（进位法）
+# 解法思路：模拟小学数学的竖式加法：同时遍历l1和l2两个链表，一位一位进行相加，算完一位直接生成一个节点，只遍历一次
 class Solution(object):
     def addTwoNumbers(self, l1, l2):
-        """
-        :type l1: Optional[ListNode]
-        :type l2: Optional[ListNode]
-        :rtype: Optional[ListNode]
-        """
-        add_num1 = self.caculate_add_sum(l1)
-        add_num2 = self.caculate_add_sum(l2)
-        #print(f"add_num1:{add_num1}  add_num2:{add_num2}")
-        sum = add_num1 + add_num2
-        #print(f"sum:{sum}")
-        # 求余数做数组
-        if sum == 0:
-            res_link = ListNode(0)
-            return res_link
-        res = []
-        while sum != 0:
-            res.append(sum % 10)    # 百分号%是取余数
-            sum = sum // 10         # //代表整除
-            res_link = self.create_linked_list(res)
-        return res_link
+        # 创建哑结点，它的next指向了链表的头
+        dummy = ListNode(0)
+        current = dummy
+
+        # 进位（carry），比如5 + 7 = 12 ， 进位1
+        carry = 0
+
+        # 只要l1，l2或者进位还没有完，那么就继续
+        while l1 or l2 or carry:
+            # 取值：加入节点存在就取val，节点不存在就当做0
+            val1 = l1.val if l1 else 0
+            val2 = l2.val if l2 else 0
+
+            # 计算：计算当前位的和
+            total = val1 + val2
+
+            # 更新进位（如12 // 10 = 1）
+            carry = total // 10
+
+            # 取个位数作为新节点的值
+            new_val = total % 10
+            
+            # 直接连接新节点
+            current.next = ListNode(new_val)
+            current = current.next
+
+            # 两个链表后移
+            if l1: l1 = l1.next
+            if l2: l2 = l2.next
+
+        return dummy.next
     
     def create_linked_list(self, arr):
-        # 定义哑结点，便于链表操作
         dummy = ListNode(0)
         current = dummy
         for val in arr:
-            # 每读到一个数字，就建立一个节点
             current.next = ListNode(val)
-            # 指针向后移动一步，站在新节点
             current = current.next
-        # dummy是虚假的链表头，dummy.next才是真正的链表头
         return dummy.next
-
+    
     def print_linked_list(self, head):
         result = []
         current = head
@@ -72,19 +141,7 @@ class Solution(object):
             current = current.next
         return result
 
-    def caculate_add_sum(self, caculate_list):
-        # TODO:取值，取值系数，加数
-            current = caculate_list
-            sum = 0     # 求加数1的值，起始值为0
-            sqar_num = 1    # 代表乘积系数，头结点是1，后面一个节点依次扩大10倍
-            while current:
-                # num代表当前位数值
-                num = current.val
-                current = current.next
-                add_num = num * sqar_num
-                sum += add_num
-                sqar_num *= 10
-            return sum
+
 
 if __name__ == '__main__':
     arr1 = [0]
